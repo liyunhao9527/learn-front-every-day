@@ -1,6 +1,11 @@
 ---
 import '../styles/global.css'
 
+import CheckOneModule from '@icon-park/react/lib/icons/CheckOne'
+import CopyModule from '@icon-park/react/lib/icons/Copy'
+import React from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
+
 import type { DomainNavItem } from '../content'
 
 interface Props {
@@ -10,6 +15,20 @@ interface Props {
 }
 
 const { currentPath = Astro.url.pathname, domains, title = 'Front Notes' } = Astro.props
+const iconProps = {
+  fill: 'currentColor',
+  size: 16,
+  strokeLinecap: 'round',
+  strokeLinejoin: 'round',
+  strokeWidth: 4,
+  theme: 'outline',
+} as const
+const CopyIcon = ('default' in CopyModule ? CopyModule.default : CopyModule) as React.ElementType
+const CheckOneIcon = (
+  'default' in CheckOneModule ? CheckOneModule.default : CheckOneModule
+) as React.ElementType
+const copyIconSvg = renderToStaticMarkup(React.createElement(CopyIcon, iconProps))
+const copiedIconSvg = renderToStaticMarkup(React.createElement(CheckOneIcon, iconProps))
 ---
 
 <!doctype html>
@@ -48,5 +67,68 @@ const { currentPath = Astro.url.pathname, domains, title = 'Front Notes' } = Ast
       </header>
       <slot />
     </div>
+    <script define:vars={{ copiedIconSvg, copyIconSvg }} is:inline>
+      const codeBlocks = document.querySelectorAll('pre')
+
+      for (const pre of codeBlocks) {
+        if (pre.parentElement?.classList.contains('code-block')) {
+          continue
+        }
+
+        const code = pre.querySelector('code')
+        const titleSource = pre.previousElementSibling?.classList.contains('code-title-source')
+          ? pre.previousElementSibling
+          : null
+        const customTitle = titleSource?.getAttribute('data-code-title')
+        const language = pre.getAttribute('data-language') || 'text'
+        const title = customTitle || language
+        const wrapper = document.createElement('figure')
+        const header = document.createElement('figcaption')
+        const label = document.createElement('span')
+        const button = document.createElement('button')
+
+        wrapper.className = 'code-block'
+        header.className = 'code-block-header'
+        label.className = 'code-block-title'
+        button.className = 'code-copy-button'
+        button.type = 'button'
+        button.innerHTML = copyIconSvg
+        button.setAttribute('aria-label', '复制代码')
+        button.setAttribute('title', '复制代码')
+        label.textContent = title
+
+        button.addEventListener('click', async () => {
+          const text = code?.textContent || ''
+
+          try {
+            await navigator.clipboard.writeText(text)
+          } catch {
+            const textarea = document.createElement('textarea')
+            textarea.value = text
+            textarea.setAttribute('readonly', '')
+            textarea.style.position = 'fixed'
+            textarea.style.opacity = '0'
+            document.body.append(textarea)
+            textarea.select()
+            document.execCommand('copy')
+            textarea.remove()
+          }
+
+          button.innerHTML = copiedIconSvg
+          button.setAttribute('aria-label', '已复制')
+          button.setAttribute('title', '已复制')
+          window.setTimeout(() => {
+            button.innerHTML = copyIconSvg
+            button.setAttribute('aria-label', '复制代码')
+            button.setAttribute('title', '复制代码')
+          }, 1400)
+        })
+
+        header.append(label, button)
+        pre.before(wrapper)
+        wrapper.append(header, pre)
+        titleSource?.remove()
+      }
+    </script>
   </body>
 </html>

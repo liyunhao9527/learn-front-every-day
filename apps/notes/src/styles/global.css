@@ -71,6 +71,70 @@ pre {
   padding: 18px;
 }
 
+.code-title-source {
+  display: none;
+}
+
+.code-block {
+  margin: 22px 0;
+  overflow: hidden;
+  border: 1px solid #d3deea;
+  border-radius: 8px;
+  background: #111827;
+}
+
+.code-block pre {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.code-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 42px;
+  border-bottom: 1px solid rgba(211, 222, 234, 0.16);
+  background: #1b2433;
+  padding: 0 12px 0 14px;
+}
+
+.code-block-title {
+  min-width: 0;
+  overflow: hidden;
+  color: #d8e3ef;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.code-copy-button {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(216, 227, 239, 0.24);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fbff;
+  cursor: pointer;
+  padding: 0;
+}
+
+.code-copy-button svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.code-copy-button:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
 pre code {
   background: transparent;
   color: inherit;

@@ -8,8 +8,150 @@ groupLabel: 基础知识
 order: 1
 ---
 
-# 我是jsx
+import { JsxExpressionDemo } from './components/JsxExpressionDemo'
 
-```tsx
-import React from 'react'
+## JSX 先解决什么问题
+
+JSX 是 JavaScript 的语法扩展，它让我们可以用接近 HTML 的写法描述组件的 UI。
+
+它不是模板语言，也不是浏览器原生语法。构建工具会把 JSX 转换成普通的 JavaScript 调用，React 再根据这些调用创建描述界面的对象，最后把它们渲染到页面上。
+
+可以先用一句话记住：
+
+> JSX 负责描述“此刻的 UI 应该长什么样”，数据变化后 React 会重新计算这份描述。
+
+## JSX 里写的是表达式
+
+花括号 `{}` 是 JSX 和 JavaScript 连接的入口。里面可以放表达式，也就是能算出一个值的代码。
+
+```tsx title="Profile.tsx"
+const user = {
+  name: 'Mia',
+  score: 92,
+}
+
+export function Profile() {
+  return (
+    <section>
+      <h2>{user.name}</h2>
+      <p>本周分数：{user.score}</p>
+      <p>{user.score >= 90 ? '表现优秀' : '继续练习'}</p>
+    </section>
+  )
+}
 ```
+
+适合放进 `{}` 的内容包括：
+
+- 变量：`{name}`
+- 运算结果：`{count + 1}`
+- 函数调用结果：`{formatDate(date)}`
+- 三元表达式：`{isActive ? '启用' : '停用'}`
+- 数组渲染结果：`{items.map((item) => <li key={item.id}>{item.name}</li>)}`
+
+不适合直接放进去的是语句，比如 `if`、`for`、`switch`。它们不直接产生一个值，通常要提前写在 `return` 之前，或者改成三元表达式、`map` 这类表达式写法。
+
+## 和 HTML 很像，但不是 HTML
+
+JSX 最容易上手的地方是它看起来像 HTML，但有几个写法要切换成 JavaScript 的习惯。
+
+```tsx title="SearchBox.tsx"
+export function SearchBox() {
+  const inputId = 'keyword'
+
+  return (
+    <label htmlFor={inputId} className="search-field">
+      关键词
+      <input id={inputId} autoComplete="off" />
+    </label>
+  )
+}
+```
+
+几个高频差异：
+
+- `class` 要写成 `className`
+- `for` 要写成 `htmlFor`
+- 属性名多用小驼峰，比如 `tabIndex`、`autoComplete`
+- 事件名写成小驼峰，比如 `onClick`、`onChange`
+- 自闭合标签必须闭合，比如 `<img />`、`<input />`
+
+## 条件渲染
+
+条件渲染的目标不是“隐藏一段 HTML”，而是根据数据返回不同的 UI 描述。
+
+```tsx title="Status.tsx"
+function Status({ isOnline }: { isOnline: boolean }) {
+  return <p>{isOnline ? '在线' : '离线'}</p>
+}
+```
+
+如果某一段 UI 只在条件成立时出现，可以用 `&&`：
+
+```tsx title="Notice.tsx"
+function Notice({ unreadCount }: { unreadCount: number }) {
+  return <div>{unreadCount > 0 && <strong>你有 {unreadCount} 条未读消息</strong>}</div>
+}
+```
+
+注意 `&&` 左侧最好是明确的布尔值。像 `0 && <span />` 会渲染出 `0`，这在初学时很容易误判。
+
+## 列表渲染和 key
+
+列表通常用 `map` 把数据数组转换成 JSX 数组。
+
+```tsx title="LessonList.tsx"
+const lessons = [
+  { id: 'jsx', title: 'JSX' },
+  { id: 'state', title: 'State' },
+]
+
+function LessonList() {
+  return (
+    <ul>
+      {lessons.map((lesson) => (
+        <li key={lesson.id}>{lesson.title}</li>
+      ))}
+    </ul>
+  )
+}
+```
+
+`key` 用来帮助 React 判断列表里哪些项保留、移动或删除。稳定的业务 id 通常比数组下标更合适，特别是列表会排序、插入、删除的时候。
+
+## 组件也是 JSX 标签
+
+小写标签表示原生元素，比如 `div`、`button`、`input`。大写标签表示组件，比如 `ProfileCard`。
+
+```tsx title="ProfileCard.tsx"
+function Badge({ children }: { children: React.ReactNode }) {
+  return <span className="badge">{children}</span>
+}
+
+export function ProfileCard() {
+  return (
+    <article>
+      <h2>Ada</h2>
+      <Badge>React Learner</Badge>
+    </article>
+  )
+}
+```
+
+组件标签上传入的属性会变成组件函数的 `props`。标签之间的内容会变成特殊的 `children` 属性。
+
+## 交互观察
+
+下面这个 demo 把几个核心点放在一起：输入值进入 JavaScript 表达式，勾选项影响条件渲染，数组通过 `map` 渲染列表。
+
+<JsxExpressionDemo client:load />
+
+## 复盘问题
+
+学完这篇后，可以用这些问题检查自己是否真正理解 JSX：
+
+- 这段 JSX 最终依赖哪些 JavaScript 值？
+- 花括号里写的是表达式，还是语句？
+- 这里应该用三元表达式、`&&`，还是提前 `return`？
+- 列表项的 `key` 是否稳定？
+- 这个标签是原生元素，还是自定义组件？

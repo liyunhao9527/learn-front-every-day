@@ -65,6 +65,9 @@ importers:
       '@astrojs/react':
         specifier: ^5.0.4
         version: 5.0.4(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(jiti@2.7.0)(lightningcss@1.32.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(yaml@2.8.4)
+      '@icon-park/react':
+        specifier: ^1.4.2
+        version: 1.4.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       astro:
         specifier: ^6.2.2
         version: 6.2.2(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.60.2)(yaml@2.8.4)
@@ -515,6 +518,13 @@ packages:
         optional: true
       prettier-plugin-ember-template-tag:
         optional: true
+
+  '@icon-park/react@1.4.2':
+    resolution: {integrity: sha512-+MtQLjNiRuia3fC/NfpSCTIy5KH5b+NkMB9zYd7p3R4aAIK61AjK0OSraaICJdkKooU9jpzk8m0fY4g9A3JqhQ==}
+    engines: {node: '>= 8.0.0', npm: '>= 5.0.0'}
+    peerDependencies:
+      react: '>=16.9'
+      react-dom: '>=16.9'
 
   '@img/colour@1.1.0':
     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
@@ -3397,6 +3407,11 @@ snapshots:
       semver: 7.7.4
     transitivePeerDependencies:
       - supports-color
+
+  '@icon-park/react@1.4.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5)':
+    dependencies:
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
 
   '@img/colour@1.1.0': {}
 
