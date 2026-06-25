@@ -26,22 +26,10 @@ if (!domain) {
         <div>
           <p class="demo-eyebrow">Roadmap</p>
           <h2>{typescriptRoadmap.title}</h2>
-          <p>{typescriptRoadmap.intro}</p>
         </div>
-        <ol class="roadmap-order">
-          {
-            typescriptRoadmap.recommendedOrder.map((topic) => (
-              <li>
-                <code>{topic.id}</code>
-                <span>{topic.label}</span>
-              </li>
-            ))
-          }
-        </ol>
       </section>
 
       <section class="roadmap-section">
-        <h2>学习主线</h2>
         <div class="roadmap-grid">
           {
             typescriptRoadmap.stages.map((stage, index) => (
@@ -106,25 +94,13 @@ if (!domain) {
 
 <style lang="scss">
   .roadmap-hero {
-    display: grid;
-    align-items: start;
-    gap: 20px;
-    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.72fr);
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 26px;
+    border-bottom: 0;
 
     h2 {
-      margin: 0 0 10px;
-    }
-
-    p {
-      max-width: 680px;
       margin: 0;
-      color: var(--muted);
     }
   }
 
-  .roadmap-order,
   .roadmap-questions {
     margin: 0;
     border: 1px solid var(--border);
@@ -133,32 +109,10 @@ if (!domain) {
     padding: 14px;
   }
 
-  .roadmap-order {
-    display: grid;
-    gap: 10px;
-    list-style: none;
-
-    li {
-      display: grid;
-      align-items: center;
-      column-gap: 18px;
-      grid-template-columns: minmax(180px, max-content) 1fr;
-      line-height: 1.35;
-    }
-
-    code {
-      background: transparent;
-      color: var(--accent);
-      font-size: 0.86em;
-      padding: 0;
-    }
-  }
-
   .roadmap-questions {
     padding-left: 36px;
   }
 
-  .roadmap-order li,
   .roadmap-questions li {
     color: #26344d;
     font-family: var(--font-sans);
@@ -248,7 +202,6 @@ if (!domain) {
   }
 
   @media (max-width: 860px) {
-    .roadmap-hero,
     .roadmap-grid {
       grid-template-columns: 1fr;
     }
