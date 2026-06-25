@@ -1,6 +1,6 @@
-# Learn Front Every Day
+# Code Atlas
 
-一个为前端学习笔记、交互 demo、跨技术栈实验准备的 monorepo。
+一个面向完整软件技术栈的学习与实战 monorepo，用于沉淀笔记、示例和真实项目。
 
 这个仓库现在拆成了几层：
 

@@ -1,5 +1,5 @@
 {
-  "name": "@learn/workspace",
+  "name": "@code-atlas/workspace",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@11.0.4",
@@ -8,11 +8,11 @@
     "pnpm": ">=11.0.4"
   },
   "scripts": {
-    "dev": "turbo dev --filter=@learn/notes",
+    "dev": "turbo dev --filter=@code-atlas/notes",
     "dev:all": "turbo dev",
-    "dev:notes": "turbo dev --filter=@learn/notes",
+    "dev:notes": "turbo dev --filter=@code-atlas/notes",
     "build": "turbo build",
-    "build:notes": "turbo build --filter=@learn/notes",
+    "build:notes": "turbo build --filter=@code-atlas/notes",
     "lint": "eslint . && turbo lint",
     "lint:fix": "eslint . --fix",
     "typecheck": "turbo typecheck",

@@ -6,7 +6,7 @@ If you update one of these files with a rule that affects how agents should work
 
 ## Project
 
-Learn Front Every Day is a frontend learning notes monorepo. The notes app uses Astro + React + MDX + Tailwind CSS + Ant Design to render content from `apps/notes/content/`.
+Code Atlas is a learning and practice monorepo for notes, examples, and real projects across the software stack. The notes app uses Astro + React + MDX + Tailwind CSS + Ant Design to render content from `apps/notes/content/`.
 
 ## Content Structure
 

@@ -1,6 +1,6 @@
-# Learn Front Every Day
+# Code Atlas
 
-前端学习笔记 monorepo，主站使用 Astro + React + MDX + Tailwind CSS 渲染笔记内容。
+面向完整软件技术栈的学习与实战 monorepo，主站使用 Astro + React + MDX + Tailwind CSS + Ant Design 渲染笔记内容。
 
 ## Agent 文档同步
 

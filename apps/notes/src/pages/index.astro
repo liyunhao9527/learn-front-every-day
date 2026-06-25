@@ -12,12 +12,12 @@ const noteCount = notes.length
 const groupCount = domains.reduce((count, domain) => count + domain.groups.length, 0)
 ---
 
-<BaseLayout domains={domains} title="Front Notes">
+<BaseLayout domains={domains} title="Code Atlas">
   <main class="home-main">
     <section class="hero">
       <div>
-        <span class="kicker">Frontend Notes Lab</span>
-        <h1>把前端知识写成能长期生长的内容系统</h1>
+        <span class="kicker">Software Knowledge Atlas</span>
+        <h1>用笔记、示例和项目构建软件知识图谱</h1>
         <p>
           笔记用 MDX 保存，交互实验用 React 组件承载。Astro 只负责把内容、路由和页面组织起来，
           让写作体验先稳住。

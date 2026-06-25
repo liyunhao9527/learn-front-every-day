@@ -14,7 +14,7 @@ interface Props {
   title?: string
 }
 
-const { currentPath = Astro.url.pathname, domains, title = 'Front Notes' } = Astro.props
+const { currentPath = Astro.url.pathname, domains, title = 'Code Atlas' } = Astro.props
 const iconProps = {
   fill: 'currentColor',
   size: 16,
@@ -35,7 +35,7 @@ const copiedIconSvg = renderToStaticMarkup(React.createElement(CheckOneIcon, ico
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="前端学习笔记与交互 demo 内容站" />
+    <meta name="description" content="软件学习笔记、交互示例与实战项目内容站" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
@@ -47,8 +47,8 @@ const copiedIconSvg = renderToStaticMarkup(React.createElement(CheckOneIcon, ico
           <a class="brand" href="/">
             <img class="brand-mark" src="/favicon.svg" alt="" aria-hidden="true" />
             <span>
-              <span class="brand-title">Front Notes</span>
-              <span class="brand-subtitle">Learning System</span>
+              <span class="brand-title">Code Atlas</span>
+              <span class="brand-subtitle">Software Atlas</span>
             </span>
           </a>
           <nav class="top-nav" aria-label="Primary">
