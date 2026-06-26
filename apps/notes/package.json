@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "cross-env ASTRO_TELEMETRY_DISABLED=1 astro dev --host 127.0.0.1",
-    "build": "cross-env ASTRO_TELEMETRY_DISABLED=1 astro-check && cross-env ASTRO_TELEMETRY_DISABLED=1 astro build",
-    "lint": "cross-env ASTRO_TELEMETRY_DISABLED=1 astro-check",
-    "typecheck": "cross-env ASTRO_TELEMETRY_DISABLED=1 astro-check",
+    "build": "cross-env ASTRO_TELEMETRY_DISABLED=1 astro sync && cross-env ASTRO_TELEMETRY_DISABLED=1 astro-check && cross-env ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "lint": "cross-env ASTRO_TELEMETRY_DISABLED=1 astro sync && cross-env ASTRO_TELEMETRY_DISABLED=1 astro-check",
+    "typecheck": "cross-env ASTRO_TELEMETRY_DISABLED=1 astro sync && cross-env ASTRO_TELEMETRY_DISABLED=1 astro-check",
     "preview": "astro preview"
   },
   "dependencies": {
