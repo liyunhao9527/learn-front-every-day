@@ -1,0 +1,445 @@
+---
+title: Class 类
+summary: 用实例、方法、this 和继承理解 JavaScript class 的日常写法。
+domain: javascript
+domainLabel: JavaScript
+group: basics
+groupLabel: JavaScript 基础
+order: 3
+---
+
+import { ClassPlaygroundDemo } from './ClassPlaygroundDemo'
+
+`class` 是 JavaScript 提供的一种创建对象的写法。它把“对象需要哪些数据”和“对象能做哪些事”放在同一个结构里，适合描述有固定行为的实体，比如用户、购物车、播放器、表单状态或一次学习记录。
+
+不要把 `class` 先理解成一种神秘的新机制。日常使用时，可以先记住一句话：
+
+> class 是创建同一类对象的模板，每次 `new` 都会得到一个独立实例。
+
+## 最小例子
+
+一个类通常包含构造函数和方法。
+
+```js
+class Counter {
+  constructor(start) {
+    this.count = start
+  }
+
+  add() {
+    this.count += 1
+    return this.count
+  }
+}
+
+const counter = new Counter(0)
+
+counter.add() // 1
+counter.add() // 2
+```
+
+这段代码里有三个角色：
+
+- `Counter` 是类，描述计数器应该怎样创建、怎样工作
+- `constructor` 会在 `new Counter(0)` 时执行
+- `counter` 是实例，它保存自己的 `count`
+
+如果再创建一个实例，它们不会共享 `count`。
+
+```js
+const first = new Counter(0)
+const second = new Counter(10)
+
+first.add() // 1
+second.add() // 11
+```
+
+## 构造函数负责初始化实例
+
+`constructor` 的主要任务是接收参数，并把初始状态写到 `this` 上。
+
+```js
+class Course {
+  constructor(title, totalLessons) {
+    this.title = title
+    this.totalLessons = totalLessons
+    this.completedLessons = 0
+  }
+}
+
+const course = new Course('JavaScript class', 8)
+
+console.log(course.title) // 'JavaScript class'
+console.log(course.completedLessons) // 0
+```
+
+`this.title`、`this.totalLessons` 和 `this.completedLessons` 都属于这一个实例。实例属性适合保存会随着对象变化的数据。
+
+## 方法负责修改或读取状态
+
+类里的普通函数叫方法。方法通常通过 `this` 读取或修改当前实例。
+
+```js
+class Course {
+  constructor(title, totalLessons) {
+    this.title = title
+    this.totalLessons = totalLessons
+    this.completedLessons = 0
+  }
+
+  completeLesson() {
+    if (this.completedLessons < this.totalLessons) {
+      this.completedLessons += 1
+    }
+  }
+
+  getProgressLabel() {
+    return `${this.completedLessons}/${this.totalLessons}`
+  }
+}
+
+const course = new Course('JavaScript class', 8)
+
+course.completeLesson()
+course.getProgressLabel() // '1/8'
+```
+
+把逻辑放进方法后，调用者不需要知道内部状态怎样更新，只需要调用清晰的动作。这样比在外部到处写 `course.completedLessons += 1` 更容易维护。
+
+## this 指向当前调用者
+
+`this` 不是“类本身”，而是方法被调用时的接收者。
+
+```js
+const course = new Course('JavaScript class', 8)
+
+course.completeLesson()
+```
+
+在 `course.completeLesson()` 里，`this` 指向 `course`。
+
+容易出错的是把方法单独取出来调用：
+
+```js
+const complete = course.completeLesson
+
+complete() // this 丢失，严格模式下通常会报错
+```
+
+如果方法需要作为回调传递，可以用箭头函数包一层，或者提前绑定。
+
+```js
+button.addEventListener('click', () => {
+  course.completeLesson()
+})
+```
+
+这时真正调用方法的代码仍然是 `course.completeLesson()`，`this` 就能指向实例。
+
+## 继承复用已有行为
+
+一个类可以通过 `extends` 继承另一个类。子类可以使用父类已有的方法，也可以改写其中的方法。
+
+```js
+class IntensiveCourse extends Course {
+  completeLesson() {
+    super.completeLesson()
+    super.completeLesson()
+  }
+}
+
+const course = new IntensiveCourse('Class 冲刺练习', 8)
+
+course.completeLesson()
+course.getProgressLabel() // '2/8'
+```
+
+`super.completeLesson()` 表示调用父类里的同名方法。这个例子里，冲刺课程每次完成两节课，但仍然复用父类的边界判断和进度格式。
+
+继承适合表达“它确实是一种更具体的类型”。如果只是想复用一小段逻辑，普通函数通常更直接。
+
+## 静态方法属于类本身
+
+静态方法用 `static` 声明。它不属于某个实例，而是直接挂在类上。
+
+```js
+class Course {
+  static fromDraft(title) {
+    return new Course(title, 0)
+  }
+
+  constructor(title, totalLessons) {
+    this.title = title
+    this.totalLessons = totalLessons
+    this.completedLessons = 0
+  }
+}
+
+const draft = Course.fromDraft('待规划课程')
+```
+
+静态方法常用于工厂方法、格式化工具、固定配置入口。它不能直接访问某个实例的 `this.completedLessons`，因为调用它时还没有具体实例。
+
+## 私有属性和私有方法
+
+有些状态只应该由类内部维护，不应该让外部随意读写。JavaScript 可以用 `#` 声明真正的私有属性。
+
+```js
+class Course {
+  #completedLessons = 0
+
+  constructor(title, totalLessons) {
+    this.title = title
+    this.totalLessons = totalLessons
+  }
+
+  completeLesson() {
+    if (this.#completedLessons < this.totalLessons) {
+      this.#completedLessons += 1
+    }
+  }
+
+  getProgressLabel() {
+    return `${this.#completedLessons}/${this.totalLessons}`
+  }
+}
+
+const course = new Course('JavaScript class', 8)
+
+course.completeLesson()
+course.getProgressLabel() // '1/8'
+course.#completedLessons // SyntaxError
+```
+
+`#completedLessons` 只能在 `Course` 类内部访问。外部不能直接读取，子类也不能直接读取。这样可以避免调用者绕过方法，直接把进度改成不合理的值。
+
+私有方法也使用同样的写法。
+
+```js
+class Course {
+  #completedLessons = 0
+
+  constructor(title, totalLessons) {
+    this.title = title
+    this.totalLessons = totalLessons
+  }
+
+  #canCompleteMore() {
+    return this.#completedLessons < this.totalLessons
+  }
+
+  completeLesson() {
+    if (this.#canCompleteMore()) {
+      this.#completedLessons += 1
+    }
+  }
+}
+```
+
+私有字段适合保存不想暴露的内部状态。不是所有属性都需要私有；如果外部读取这个值是合理需求，可以提供一个方法或 getter。
+
+## getter 和 setter
+
+`get` 可以把一个计算结果写成“像属性一样读取”的形式。
+
+```js
+class Course {
+  constructor(title, totalLessons) {
+    this.title = title
+    this.totalLessons = totalLessons
+    this.completedLessons = 0
+  }
+
+  get progress() {
+    return this.completedLessons / this.totalLessons
+  }
+}
+
+const course = new Course('JavaScript class', 8)
+
+course.completedLessons = 2
+course.progress // 0.25
+```
+
+`progress` 看起来像属性，但每次读取时都会执行 getter。它适合表达“根据当前状态算出来的值”，比如完成比例、总价、格式化名称。
+
+`set` 可以拦截赋值，并在写入前做校验或转换。
+
+```js
+class Course {
+  #completedLessons = 0
+
+  constructor(title, totalLessons) {
+    this.title = title
+    this.totalLessons = totalLessons
+  }
+
+  get completedLessons() {
+    return this.#completedLessons
+  }
+
+  set completedLessons(value) {
+    if (value < 0 || value > this.totalLessons) {
+      throw new Error('completedLessons 超出课程范围')
+    }
+
+    this.#completedLessons = value
+  }
+}
+
+const course = new Course('JavaScript class', 8)
+
+course.completedLessons = 3
+course.completedLessons // 3
+```
+
+getter 和 setter 不适合隐藏复杂副作用。读取属性时如果发请求、改状态或做很重的计算，调用者很难从 `course.progress` 这种写法看出成本。
+
+## 交互观察
+
+<ClassPlaygroundDemo client:load />
+
+练习时可以观察两件事：
+
+- 普通实例每次调用 `completeLesson()` 只前进一步
+- 继承实例改写了 `completeLesson()`，所以同一个按钮会产生不同结果
+
+## class 和普通对象怎么选
+
+如果只是保存一组简单数据，普通对象就够了。
+
+```js
+const course = {
+  title: 'JavaScript class',
+  totalLessons: 8,
+  completedLessons: 0,
+}
+```
+
+如果对象有一组稳定行为，而且你会创建多个同类对象，`class` 更合适。
+
+```js
+const basic = new Course('基础课', 8)
+const project = new Course('项目课', 12)
+```
+
+可以用这个判断：
+
+- 只有数据，没有固定行为：优先普通对象
+- 需要多个实例，每个实例都有同样的方法：可以使用 `class`
+- 只是想组合几段函数：优先普通函数
+- 需要表达一种更具体的类型：再考虑继承
+
+## 常见错误
+
+忘记 `new`：
+
+```js
+const course = Course('JavaScript class', 8)
+```
+
+类必须通过 `new` 调用，否则会报错。
+
+把实例属性写成局部变量：
+
+```js
+class Course {
+  constructor(title) {
+    const courseTitle = title
+  }
+}
+```
+
+`courseTitle` 只存在于构造函数内部，方法访问不到。需要长期保存在实例上的数据应该写成 `this.courseTitle = title`。
+
+在方法里忘记 `this`：
+
+```js
+class Course {
+  completeLesson() {
+    completedLessons += 1
+  }
+}
+```
+
+`completedLessons` 不是局部变量，也不是自动找到的实例属性。应该写成 `this.completedLessons += 1`。
+
+## 练习
+
+练习 1：写一个 `TodoItem` 类，包含 `title` 和 `done`。添加一个 `toggle()` 方法，让任务在完成和未完成之间切换。
+
+参考代码：
+
+```js
+class TodoItem {
+  constructor(title) {
+    this.title = title
+    this.done = false
+  }
+
+  toggle() {
+    this.done = !this.done
+  }
+}
+
+const item = new TodoItem('复习 class')
+
+item.toggle()
+console.log(item.done) // true
+```
+
+练习 2：在 `TodoItem` 上添加 `getLabel()` 方法。完成时返回 `[x] 标题`，未完成时返回 `[ ] 标题`。
+
+参考代码：
+
+```js
+class TodoItem {
+  constructor(title) {
+    this.title = title
+    this.done = false
+  }
+
+  getLabel() {
+    return `${this.done ? '[x]' : '[ ]'} ${this.title}`
+  }
+
+  toggle() {
+    this.done = !this.done
+  }
+}
+
+const item = new TodoItem('复习 class')
+
+item.getLabel() // '[ ] 复习 class'
+item.toggle()
+item.getLabel() // '[x] 复习 class'
+```
+
+练习 3：写一个 `PriorityTodoItem` 继承 `TodoItem`，添加 `priority`，并改写 `getLabel()`，让结果带上优先级。
+
+参考代码：
+
+```js
+class PriorityTodoItem extends TodoItem {
+  constructor(title, priority) {
+    super(title)
+    this.priority = priority
+  }
+
+  getLabel() {
+    return `${super.getLabel()} - ${this.priority}`
+  }
+}
+
+const item = new PriorityTodoItem('整理笔记', 'high')
+
+item.getLabel() // '[ ] 整理笔记 - high'
+```
+
+## 复盘问题
+
+- `constructor` 什么时候执行？
+- 哪些数据应该写到 `this` 上？
+- 方法里的 `this` 指向谁？
+- 什么时候普通对象比 `class` 更直接？
+- 子类改写方法时，为什么有时还要调用 `super`？
